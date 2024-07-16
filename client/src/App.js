@@ -1,5 +1,6 @@
 import React from "react";
 import GoogleMapReact from 'google-map-react';
+import { useEffect } from 'react';
 import './App.css';
 
 const AnyReactComponent = ({ text }) => <div>{text}</div>;
@@ -37,6 +38,23 @@ export default function SimpleMap(){
     center: {lat: 41.3163, lng: -72.9223},
     zoom: 11
   };
+
+  // // test using index.js
+  // useEffect(() => {
+  //   fetch('http://localhost:3200/test')
+  //     .then(response => response.json())
+  //     .then(data => console.log(data))
+  //     .catch(error => console.error('Error fetching data:', error));
+  // }, []);
+
+  // test parsing
+  useEffect(() => {
+    fetch('http://localhost:3200/test')
+      .then(response => response.json())
+      .then(data => console.log(data))
+      .catch(error => console.error('Error fetching coordinates:', error));
+  }, []);
+
 
 return (
   <div>
