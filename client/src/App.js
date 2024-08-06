@@ -32,7 +32,7 @@ export default function SimpleMap(){
 
 return (
   <div>
-    <h1>Header 1</h1>
+    <h1 className='text-6xl'>Header 1</h1>
     <div>
       {coordinates.length > 0 ? (
         <ul>
