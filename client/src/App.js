@@ -14,7 +14,7 @@ export default function SimpleMap(){
   };
 
   useEffect(() => {
-    fetch('/test')
+    fetch('http://localhost:3200/test')
       .then(response => response.json())
       .then(data => {
         setCoordinates(data);
