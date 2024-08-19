@@ -6,7 +6,8 @@ import './App.css';
 export default function SimpleMap(){
 
   const [coordinates, setCoordinates] = useState([]);
-  const [center, setCenter] = useState(null);
+  const [center, setCenter] = useState({lat: 39.8283, lng: -98.5795}); // center of U.S. as default
+  const [zoom, setZoom] = useState(4);
 
   const handleGpxFile = (event) => {
     const gpxFile = event.target.files[0];
@@ -23,7 +24,8 @@ export default function SimpleMap(){
       .then((response) => response.json())
       .then((data) => {
         setCoordinates(data.coordinates);
-        setCenter(data.center)
+        setCenter(data.center || { lat: 39.8283, lng: -98.5795 });
+        setZoom(12);
       })
       .catch((error) => console.error('Error uploading file:', error));
   };
@@ -41,11 +43,6 @@ export default function SimpleMap(){
     }, [coordinates]);
     return null;
   }
-
-  const defaultProps = {
-    center: {lat: 39.8283, lng: -98.5795},
-    zoom: 5
-  };
 
   var heatMapData = {
     positions: coordinates,
@@ -94,8 +91,8 @@ return (
           key: process.env.REACT_APP_GOOGLEMAPS_API_KEY,
           libraries: ['visualization']
         }}
-        center={center || defaultProps.center}
-        defaultZoom={defaultProps.zoom}
+        center={center}
+        zoom={zoom}
         heatmapLibrary={true}
         heatmap={heatMapData}
       >

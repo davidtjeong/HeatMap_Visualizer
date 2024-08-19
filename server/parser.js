@@ -39,7 +39,7 @@ app.post('/upload', upload.single('gpxFile'), (req, res) => {
       center.lat /= numPoints;
       center.lng /= numPoints;
 
-      res.json({ coordinates, center });
+      res.json({ coordinates, center }); // return the coordinates and center
 
       fs.unlink(filePath, (err) => {
         if(err){
