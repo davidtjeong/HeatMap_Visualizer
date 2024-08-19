@@ -1,7 +1,7 @@
 # HeatMap Visualizer
-Learning heatmap visualization techniques utilizing Google Maps Javascript API
+Learning heatmap visualization techniques utilizing Google Maps API. Parses gpx files to quickly visualize data and trails and handles file uploads for parsing
 
-A full stack web application with a React frontend and Node/Express backend. Dependencies are managed with Yarn
+A full stack web application with a React frontend designed with Tailwind CSS and a Node/Express backend. Dependencies are managed with Yarn. The server is hosted on AWS EC2.
 
 ## How to run
 First, install the dependencies in the root directory: `yarn install`
