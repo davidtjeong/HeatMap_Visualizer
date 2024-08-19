@@ -17,7 +17,8 @@ export default function SimpleMap(){
     }
     const formData = new FormData();
     formData.append('gpxFile', gpxFile);
-    fetch('http://localhost:3200/upload', {
+    
+    fetch('http://67.202.53.255:80/upload', {
       method: 'POST',
       body: formData,
     })
@@ -29,6 +30,18 @@ export default function SimpleMap(){
       })
       .catch((error) => console.error('Error uploading file:', error));
   };
+  //   fetch('http://localhost:3200/upload', {
+  //     method: 'POST',
+  //     body: formData,
+  //   })
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       setCoordinates(data.coordinates);
+  //       setCenter(data.center || { lat: 39.8283, lng: -98.5795 });
+  //       setZoom(12);
+  //     })
+  //     .catch((error) => console.error('Error uploading file:', error));
+  // };
 
   const CoordinatesLogger = ({ coordinates }) => {
     useEffect(() => {

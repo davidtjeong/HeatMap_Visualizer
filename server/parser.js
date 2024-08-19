@@ -7,7 +7,7 @@ const { parseString } = require('xml2js');
 
 const app = express();
 app.use(cors());
-const port = process.env.PORT || 3200;
+const port = 80;
 
 const upload = multer({ storage: multer.memoryStorage() });
 
@@ -40,5 +40,5 @@ app.post('/upload', upload.single('gpxFile'), (req, res) => {
   });
 
 app.listen(port, () => {
-  console.log(`Server running at ${port}`);
+  console.log(`Server running on http://0.0.0.0:${port}`);
 });
