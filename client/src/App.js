@@ -30,18 +30,6 @@ export default function SimpleMap(){
       })
       .catch((error) => console.error('Error uploading file:', error));
   };
-  //   fetch('http://localhost:3200/upload', {
-  //     method: 'POST',
-  //     body: formData,
-  //   })
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       setCoordinates(data.coordinates);
-  //       setCenter(data.center || { lat: 39.8283, lng: -98.5795 });
-  //       setZoom(12);
-  //     })
-  //     .catch((error) => console.error('Error uploading file:', error));
-  // };
 
   const CoordinatesLogger = ({ coordinates }) => {
     useEffect(() => {
@@ -72,9 +60,9 @@ return (
         HeatMap Visualizer
       </h1>
       <p className="text-xl text-left pt-6 pl-4">
-        A heatmap visualizing tool to allow users to quickly visualize data.<br></br>
+        A heatmap visualizing tool to allow users to quickly visualize data and trails<br></br>
         <span className="block mb-2"></span>
-        Currently parses through GPX files and displays points, but functionality for parsing Google Timeline data is currently being worked on
+        Parses through GPX files and displays points
       </p>
 
       <span className="block mb-20"></span>
