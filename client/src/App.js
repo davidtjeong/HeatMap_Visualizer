@@ -33,7 +33,7 @@ export default function SimpleMap(){
 return (
   <div className="flex h-screen">
     <div className="w-1/3 border-r p-3">
-      <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-sans text-center">
+      <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-dmsans text-center">
         HeatMap Visualizer
       </h1>
       {/* <div>
@@ -58,7 +58,7 @@ return (
       <span className="block mb-20"></span>
 
       <div className="flex items-center justify-center">
-        <button className="p-3 bg-blue-500 text-white rounded shadow-lg hover:bg-blue-600 transition-colors duration-300">
+        <button className="p-3 bg-blue-500 text-white rounded shadow-lg hover:bg-blue-600 transition-colors duration-300 font-dmsans">
           Click here to upload a gpx file
         </button>
       </div>
