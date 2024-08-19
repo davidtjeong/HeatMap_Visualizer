@@ -3,24 +3,49 @@ import GoogleMapReact from 'google-map-react';
 import { useState, useEffect } from 'react';
 import './App.css';
 
-const AnyReactComponent = ({ text }) => <div>{text}</div>;
-
 export default function SimpleMap(){
 
   const [coordinates, setCoordinates] = useState([]);
-  const defaultProps = {
-    center: {lat: 39.8283, lng: -98.5795},
-    zoom: 4
+  const [center, setCenter] = useState(null);
+
+  const handleGpxFile = (event) => {
+    const gpxFile = event.target.files[0];
+    if(!gpxFile){
+      console.log("No file selected");
+      return;
+    }
+    const formData = new FormData();
+    formData.append('gpxFile', gpxFile);
+    fetch('http://localhost:3200/upload', {
+      method: 'POST',
+      body: formData,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setCoordinates(data.coordinates);
+        setCenter(data.center)
+      })
+      .catch((error) => console.error('Error uploading file:', error));
   };
 
-  useEffect(() => {
-    fetch('http://localhost:3200/test')
-      .then(response => response.json())
-      .then(data => {
-        setCoordinates(data);
-      })
-      .catch(error => console.error('Error fetching coordinates:', error));
-  }, []);
+  const CoordinatesLogger = ({ coordinates }) => {
+    useEffect(() => {
+      if(coordinates.length > 0) {
+        coordinates.forEach((coord, index) => {
+          console.log(`Coordinate ${index + 1}: Latitude: ${coord.lat}, Longitude: ${coord.lng}`);
+        });
+      }
+      else{
+        console.log("No coordinates found");
+      }
+    }, [coordinates]);
+    return null;
+  }
+
+  const defaultProps = {
+    center: {lat: 39.8283, lng: -98.5795},
+    zoom: 5
+  };
 
   var heatMapData = {
     positions: coordinates,
@@ -36,19 +61,6 @@ return (
       <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-dmsans text-center">
         HeatMap Visualizer
       </h1>
-      {/* <div>
-        {coordinates.length > 0 ? (
-          <ul>
-            {coordinates.map((coord, index) => (
-              <li key={index}>
-                Latitude: {coord.lat}, Longitude: {coord.lng}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>No coordinates available</p>
-        )}
-      </div> */}
       <p className="text-xl text-left pt-6 pl-4">
         A heatmap visualizing tool to allow users to quickly visualize data.<br></br>
         <span className="block mb-2"></span>
@@ -56,12 +68,24 @@ return (
       </p>
 
       <span className="block mb-20"></span>
-
       <div className="flex items-center justify-center">
-        <button className="p-3 bg-blue-500 text-white rounded shadow-lg hover:bg-blue-600 transition-colors duration-300 font-dmsans">
-          Click here to upload a gpx file
-        </button>
+        <input
+          type="file"
+          id="fileInput"
+          onChange={handleGpxFile}
+          className="hidden"
+        />
+        <label
+          htmlFor="fileInput"
+          className="p-3 bg-blue-500 text-white rounded shadow-lg hover:bg-blue-600 transition-colors duration-300 font-dmsans cursor-pointer"
+        >
+          Upload GPX File
+        </label>
       </div>
+    </div>
+
+    <div>
+      <CoordinatesLogger coordinates={coordinates} />
     </div>
 
     <div className="w-2/3 h-full border-l border-gray-500" style={{ borderLeftWidth: '5px' }}>
@@ -70,16 +94,11 @@ return (
           key: process.env.REACT_APP_GOOGLEMAPS_API_KEY,
           libraries: ['visualization']
         }}
-        defaultCenter={defaultProps.center}
+        center={center || defaultProps.center}
         defaultZoom={defaultProps.zoom}
         heatmapLibrary={true}
         heatmap={heatMapData}
       >
-        {/* <AnyReactComponent
-          lat={40.762312}
-          lng={-73.979345}
-          text="My Marker"
-        /> */}
       </GoogleMapReact>
     </div>
   </div>

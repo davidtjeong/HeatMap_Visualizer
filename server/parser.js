@@ -1,35 +1,52 @@
 const express = require('express');
 const cors  =require('cors');
+const multer = require('multer');
 const fs = require('fs');
-const xml2js = require('xml2js');
+const path = require('path');
+const { parseString } = require('xml2js');
 
 const app = express();
 app.use(cors());
 const port = 3200;
 
-// Function to read and parse GPX file
-const parseGpxFile = (filePath, callback) => {
+const upload = multer({ dest: 'uploads/' });
 
-  fs.readFile(filePath, (err, data) => {
+app.post('/upload', upload.single('gpxFile'), (req, res) => {
+  const filePath = path.join(__dirname, 'uploads', req.file.filename);
 
-    if (err) throw err;
-    xml2js.parseString(data, (err, result) => {
-      if (err) throw err;
-      const trkpts = result.gpx.trk[0].trkseg[0].trkpt;
-      const coordinates = trkpts.map(trkpt => ({
-        lat: trkpt.$.lat,
-        lng: trkpt.$.lon
+  fs.readFile(filePath, 'utf8', (err, data) => {
+    if(err){
+      return res.status(500).send('Error reading file');
+    }
+
+    parseString(data, (err, result) => {
+      if(err){
+        return res.status(500).send('Error parsing the gpx file');
+      }
+      const coordinates = result.gpx.trk[0].trkseg[0].trkpt.map(point => ({
+        lat: parseFloat(point.$.lat),
+        lng: parseFloat(point.$.lon)
       }));
-      
-      callback(coordinates);
+
+      // Calculate the center
+      const numPoints = coordinates.length;
+      const center = coordinates.reduce((acc, point) => {
+        acc.lat += point.lat;
+        acc.lng += point.lng;
+        return acc;
+      }, { lat: 0, lng: 0 });
+
+      center.lat /= numPoints;
+      center.lng /= numPoints;
+
+      res.json({ coordinates, center });
+
+      fs.unlink(filePath, (err) => {
+        if(err){
+          console.error('Error deleting file:', err);
+        }
+      });
     });
-  });
-};
-
-
-app.get('/test', (req, res) => {
-  parseGpxFile('../example.gpx', coordinates => {
-    res.json(coordinates);
   });
 });
 
