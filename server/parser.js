@@ -7,19 +7,15 @@ const { parseString } = require('xml2js');
 
 const app = express();
 app.use(cors());
-const port = 3200;
+const port = process.env.PORT || 3200;
 
-const upload = multer({ dest: 'uploads/' });
+const upload = multer({ storage: multer.memoryStorage() });
 
 app.post('/upload', upload.single('gpxFile'), (req, res) => {
-  const filePath = path.join(__dirname, 'uploads', req.file.filename);
 
-  fs.readFile(filePath, 'utf8', (err, data) => {
-    if(err){
-      return res.status(500).send('Error reading file');
-    }
+  const fileBuffer = req.file.buffer.toString('utf8');
 
-    parseString(data, (err, result) => {
+    parseString(fileBuffer, (err, result) => {
       if(err){
         return res.status(500).send('Error parsing the gpx file');
       }
@@ -40,15 +36,8 @@ app.post('/upload', upload.single('gpxFile'), (req, res) => {
       center.lng /= numPoints;
 
       res.json({ coordinates, center }); // return the coordinates and center
-
-      fs.unlink(filePath, (err) => {
-        if(err){
-          console.error('Error deleting file:', err);
-        }
-      });
     });
   });
-});
 
 app.listen(port, () => {
   console.log(`Server running at ${port}`);
